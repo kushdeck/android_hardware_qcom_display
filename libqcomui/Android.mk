@@ -23,6 +23,11 @@ LOCAL_SHARED_LIBRARIES := \
         libEGL \
         libskia
 
+ifeq ($(TARGET_BOARD_PLATFORM),qsd8k)
+      LOCAL_SHARED_LIBRARIES += libmemalloc
+endif
+
+LOCAL_CFLAGS += -DDEBUG_CALC_FPS
 LOCAL_C_INCLUDES := $(TOP)/hardware/qcom/display/libgralloc \
                     $(TOP)/frameworks/base/services/surfaceflinger \
                     $(TOP)/external/skia/include/core \
@@ -35,6 +40,14 @@ else
 endif
 
 LOCAL_CFLAGS += -DDEBUG_CALC_FPS
+
+# Hacks for broken mdp versions
+ifeq ($(BOARD_ADRENO_DECIDE_TEXTURE_TARGET),true)
+    LOCAL_CFLAGS += -DDECIDE_TEXTURE_TARGET
+    ifeq ($(BOARD_ADRENO_AVOID_EXTERNAL_TEXTURE),true)
+        LOCAL_CFLAGS += -DCHECK_FOR_EXTERNAL_FORMAT
+    endif
+endif
 
 LOCAL_MODULE := libQcomUI
 LOCAL_MODULE_TAGS := optional

@@ -35,6 +35,18 @@ ifeq ($(TARGET_USES_C2D_COMPOSITION),true)
     include $(BUILD_SHARED_LIBRARY)
 else
     ifneq ($(TARGET_BOARD_PLATFORM),msm7x30)
+      ifeq ($(TARGET_BOARD_PLATFORM),qsd8k)
+            include $(CLEAR_VARS)
+            LOCAL_PRELINK_MODULE    := false
+            LOCAL_MODULE_PATH       := $(TARGET_OUT_SHARED_LIBRARIES)/hw
+            LOCAL_SHARED_LIBRARIES  := liblog libmemalloc
+            LOCAL_SRC_FILES         := software_converter.cpp copybit.cpp
+            LOCAL_MODULE            := copybit.$(TARGET_BOARD_PLATFORM)
+            LOCAL_MODULE_TAGS       := optional
+            LOCAL_C_INCLUDES        += hardware/qcom/display/libgralloc
+            LOCAL_CFLAGS            += -D__ARM_HAVE_NEON -DCOPYBIT_QSD8K=1
+            include $(BUILD_SHARED_LIBRARY)
+      else
         include $(CLEAR_VARS)
         ifeq ($(ARCH_ARM_HAVE_NEON),true)
             LOCAL_CFLAGS += -D__ARM_HAVE_NEON
@@ -62,5 +74,6 @@ else
         LOCAL_C_INCLUDES += hardware/qcom/display/libgralloc
         LOCAL_CFLAGS += -DCOPYBIT_MSM7K=1
         include $(BUILD_SHARED_LIBRARY)
+      endif
     endif
 endif

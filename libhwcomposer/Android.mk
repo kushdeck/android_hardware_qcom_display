@@ -23,6 +23,7 @@ LOCAL_C_INCLUDES += hardware/qcom/display/libqcomui
 
 ifeq ($(TARGET_QCOM_HDMI_OUT),true)
 LOCAL_CFLAGS += -DHDMI_DUAL_DISPLAY
+LOCAL_CFLAGS += -DQCOM_HDMI_OUT
 endif
 ifeq ($(TARGET_USES_OVERLAY),true)
 LOCAL_CFLAGS += -DUSE_OVERLAY
